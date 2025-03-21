@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
 
-test.describe('Login Tests', () => {
+test.describe('Testes de login', () => {
   test('Login com credenciais válidas clicando no botão', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
