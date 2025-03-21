@@ -3,7 +3,7 @@ import { LoginPage } from "../pages/loginPage";
 import { InventoryPage } from "../pages/inventoryPage";
 import { LoginCredentials } from "../interfaces/login.interface";
 
-test.describe("Testes de ordenação de itens", () => {
+test.describe("Testes de ordenação de itens no inventário", () => {
   let loginPage: LoginPage;
   let inventoryPage: InventoryPage;
 

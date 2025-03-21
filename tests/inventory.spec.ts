@@ -7,10 +7,12 @@ import { InventoryItem } from "../interfaces/inventory.interface";
 test.describe("Testes de Carrinho", () => {
   let loginPage: LoginPage;
   let inventoryPage: InventoryPage;
+
   const item: InventoryItem = {
     name: "Sauce Labs Backpack",
     price: 29.99,
     id: "sauce-labs-backpack",
+    description: "carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection."
   };
 
   test.beforeEach(async ({ page }) => {
@@ -58,6 +60,7 @@ test.describe("Testes de Carrinho", () => {
         id: item.id,
         name: item.name,
         price: item.price,
+        description: item.description,
       });
     }
 

@@ -1,4 +1,3 @@
-// inventoryPage.ts
 import { Page } from "@playwright/test";
 import { InventoryItem } from "../interfaces/inventory.interface";
 
@@ -8,7 +7,7 @@ export class InventoryPage {
     constructor(page: Page) {
         this.page = page;
     }
-    
+
     private generateButtonId(item: InventoryItem, action: 'add' | 'remove') {
         const actionId = action === 'add' ? 'add-to-cart' : 'remove';
         return `#${actionId}-${item.id.toLowerCase().replace(/ /g, '-')}`;
@@ -17,9 +16,22 @@ export class InventoryPage {
     async addItemToCart(item: InventoryItem) {
         const addButtonId = this.generateButtonId(item, 'add');
         const removeButtonId = this.generateButtonId(item, 'remove');
-        
+
         await this.page.click(addButtonId);
         await this.page.waitForSelector(removeButtonId, { state: 'visible' });
+    }
+
+    async getProductName(productId: string): Promise<string> {
+        return this.page.locator(`[data-test="item-${productId}-title-link"] [data-test="inventory-item-name"]`).innerText();
+    }
+
+    async getProductDescription(productId: string): Promise<string> {
+        return this.page.locator(`[data-test="item-${productId}-title-link"] >> xpath=../..//div[@data-test="inventory-item-desc"]`).innerText();
+    }
+
+    async getProductPrice(productId: string): Promise<number> {
+        const priceText = await this.page.locator(`[data-test="item-${productId}-title-link"] >> xpath=../..//div[@data-test="inventory-item-price"]`).innerText();
+        return parseFloat(priceText.replace('$', ''));
     }
 
     async removeItemFromCart(item: InventoryItem) {

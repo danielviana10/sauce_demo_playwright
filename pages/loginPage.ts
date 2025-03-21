@@ -17,14 +17,14 @@ export class LoginPage {
         await this.page.fill('#password', credentials.password);
         await this.page.click('#login-button');
     }
-    
+
     async getErrorMessageText() {
         return this.page.locator('[data-test="error"]').innerText();
     }
 
     async isInventoryPageVisible() {
         return this.page.locator('.inventory_list').isVisible();
-    }    
+    }
 
     getPage() {
         return this.page;
