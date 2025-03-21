@@ -1,4 +1,6 @@
+// inventoryPage.ts
 import { Page } from "@playwright/test";
+import { InventoryItem } from "../interfaces/inventory.interface";
 
 export class InventoryPage {
     private page: Page;
@@ -6,39 +8,52 @@ export class InventoryPage {
     constructor(page: Page) {
         this.page = page;
     }
-
-    // Navega para a página de inventário
-    async navigate() {
-        await this.page.goto("https://www.saucedemo.com/inventory.html");
+    
+    private generateButtonId(item: InventoryItem, action: 'add' | 'remove') {
+        const actionId = action === 'add' ? 'add-to-cart' : 'remove';
+        return `#${actionId}-${item.id.toLowerCase().replace(/ /g, '-')}`;
     }
 
-    // Adiciona um item ao carrinho pelo nome do produto
-    async addItemToCart(itemName: string) {
-        const buttonId = `#add-to-cart-${itemName.toLowerCase().replace(/ /g, '-')}`;
-        await this.page.click(buttonId);
+    async addItemToCart(item: InventoryItem) {
+        const addButtonId = this.generateButtonId(item, 'add');
+        const removeButtonId = this.generateButtonId(item, 'remove');
+        
+        await this.page.click(addButtonId);
+        await this.page.waitForSelector(removeButtonId, { state: 'visible' });
     }
 
-    // Remove um item do carrinho pelo nome do produto
-    async removeItemFromCart(itemName: string) {
-        const buttonId = `#remove-${itemName.toLowerCase().replace(/ /g, '-')}`;
-        await this.page.waitForSelector(buttonId, { state: 'visible' });
-        await this.page.click(buttonId);
-      }
+    async removeItemFromCart(item: InventoryItem) {
+        const removeButtonId = this.generateButtonId(item, 'remove');
+        await this.page.waitForSelector(removeButtonId, { state: 'visible' });
+        await this.page.click(removeButtonId);
+    }
 
-    // Verifica se o ícone do carrinho mostra a quantidade correta de itens
     async getCartItemCount() {
         const cartCount = await this.page.locator('.shopping_cart_badge').textContent();
         return cartCount ? parseInt(cartCount) : 0;
     }
 
-    // Navega para a página do carrinho
     async goToCart() {
         await this.page.locator('[data-test="shopping-cart-link"]').click();
     }
 
-    // Verifica se um item está no carrinho
-    async checkCartItem(itemName: string): Promise<boolean> {
-        const itemInCart = await this.page.locator(`.cart_item:has-text("${itemName}")`).isVisible();
+    async checkCartItem(item: InventoryItem): Promise<boolean> {
+        const itemInCart = await this.page.locator(`.cart_item:has-text("${item.name}")`).isVisible();
         return itemInCart;
-      }
+    }
+
+    async sortItems(option: 'az' | 'za' | 'lohi' | 'hilo') {
+        await this.page.waitForSelector('[data-test="product-sort-container"]', { state: 'visible' });
+        await this.page.locator('[data-test="product-sort-container"]').selectOption(option);
+    }
+
+    async getItemNames() {
+        const itemNames = await this.page.locator('.inventory_item_name').allTextContents();
+        return itemNames;
+    }
+
+    async getItemPrices(): Promise<number[]> {
+        const itemPrices = await this.page.locator('.inventory_item_price').allTextContents();
+        return itemPrices.map(price => parseFloat(price.replace('$', '')));
+    }
 }

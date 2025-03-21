@@ -1,43 +1,70 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/loginPage';
+import { test, expect } from "@playwright/test";
+import { LoginPage } from "../pages/loginPage";
+import { LoginCredentials } from "../interfaces/login.interface";
 
-test.describe('Testes de login', () => {
-  test('Login com credenciais válidas clicando no botão', async ({ page }) => {
-    const loginPage = new LoginPage(page);
+test.describe("Testes de login", () => {
+  let loginPage: LoginPage;
+
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('standard_user', 'secret_sauce');
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
   });
 
-  test('Login com credenciais inválidas clicando no botão', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.navigate();
-    await loginPage.login('invalid_user', 'invalid_password');
-    const errorMessage = await loginPage.getErrorMessage();
-    await expect(errorMessage).toHaveText('Epic sadface: Username and password do not match any user in this service');
+  test("Login com credenciais válidas clicando no botão", async () => {
+    const credentials: LoginCredentials = {
+      username: "standard_user",
+      password: "secret_sauce",
+    };
+    await loginPage.login(credentials);
+
+    await expect(loginPage.getPage()).toHaveURL(
+      "https://www.saucedemo.com/inventory.html"
+    );
+
+    expect(await loginPage.isInventoryPageVisible()).toBe(true);
   });
 
-  test('Login sem preencher nenhum campo', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.navigate();
-    await loginPage.login('', '');
-    const errorMessage = await loginPage.getErrorMessage();
-    await expect(errorMessage).toHaveText('Epic sadface: Username is required');
+  test("Login com credenciais inválidas clicando no botão", async () => {
+    const credentials: LoginCredentials = {
+      username: "invalid_user",
+      password: "invalid_password",
+    };
+    await loginPage.login(credentials);
+    expect(await loginPage.getErrorMessageText()).toBe(
+      "Epic sadface: Username and password do not match any user in this service"
+    );
   });
 
-  test('Login preenchendo apenas o username', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.navigate();
-    await loginPage.login('standard_user', '');
-    const errorMessage = await loginPage.getErrorMessage();
-    await expect(errorMessage).toHaveText('Epic sadface: Password is required');
+  test("Login sem preencher nenhum campo", async () => {
+    const credentials: LoginCredentials = {
+      username: "",
+      password: "",
+    };
+    await loginPage.login(credentials);
+    expect(await loginPage.getErrorMessageText()).toBe(
+      "Epic sadface: Username is required"
+    );
   });
 
-  test('Login preenchendo apenas a password', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.navigate();
-    await loginPage.login('', 'secret_sauce');
-    const errorMessage = await loginPage.getErrorMessage();
-    await expect(errorMessage).toHaveText('Epic sadface: Username is required');
+  test("Login preenchendo apenas o username", async () => {
+    const credentials: LoginCredentials = {
+      username: "standard_user",
+      password: "",
+    };
+    await loginPage.login(credentials);
+    expect(await loginPage.getErrorMessageText()).toBe(
+      "Epic sadface: Password is required"
+    );
+  });
+
+  test("Login preenchendo apenas a password", async () => {
+    const credentials: LoginCredentials = {
+      username: "",
+      password: "secret_sauce",
+    };
+    await loginPage.login(credentials);
+    expect(await loginPage.getErrorMessageText()).toBe(
+      "Epic sadface: Username is required"
+    );
   });
 });
