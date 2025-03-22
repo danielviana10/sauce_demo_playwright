@@ -62,10 +62,13 @@ npx playwright test login.spec.ts (para um teste isolado)
 ```
 Por padrão o headless está marcado como:
   headless: true, ....
+
 Porém, se quer observar os testes acontecendo, mude para false e remova o cometário lauchOptions, caso queria observar mais devagar, aumente para 1000 (1s) ou 2000 (2s):
+  
   launchOptions: {
     slowMo: 500,
   }, ...
+
 ou execute o teste com a tag `--headed`:
 ```bash
 npx playwright test --headed
