@@ -4,7 +4,7 @@ import { InventoryItem } from "../interfaces/inventory.interface";
 /**
  * Extrai os itens da lista de inventário.
  * @param page - A instância da página do Playwright.
- * @returns Um array de objetos contendo nome, descrição, preço e ID dos itens.
+ * @returns Um array de objetos contendo nome, descrição, preço, ID e src da imagem dos itens.
  */
 export async function getInventoryItems(page: Page): Promise<InventoryItem[]> {
     const items: InventoryItem[] = [];
@@ -30,8 +30,14 @@ export async function getInventoryItems(page: Page): Promise<InventoryItem[]> {
             throw new Error(`Não foi possível extrair o ID do item: ${dataTestAttribute}`);
         }
 
+        // Obtém o src da imagem do item
+        const imageSrc = await itemElement.locator('img.inventory_item_img').getAttribute('src');
+
+        if (!imageSrc) {
+            throw new Error(`Não foi possível extrair a imagem do item: ${imageSrc}`);
+        }
         // Adiciona o item à lista
-        items.push({ name, description, price, id });
+        items.push({ name, description, price, id, imageSrc });
     }
 
     return items;

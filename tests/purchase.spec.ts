@@ -5,11 +5,13 @@ import { PurchaseFlow } from '../pages/purchaseFlow';
 import { InventoryPage } from '../pages/inventoryPage';
 import { InventoryItem } from '../interfaces/inventory.interface';
 import { FormCheckout } from '../interfaces/form.interface';
+import { CartPage } from '../pages/cartPage';
 
 test.describe('Fluxo de Compra', () => {
     let loginPage: LoginPage;
     let purchaseFlow: PurchaseFlow;
     let inventoryPage: InventoryPage;
+    let cartPage: CartPage
 
     // Dados do formulário de checkout
     const data: FormCheckout = {
@@ -19,12 +21,13 @@ test.describe('Fluxo de Compra', () => {
     };
 
     /**
-     * Executa antes de cada teste: inicializa as páginas e faz login.
-     */
+        * Executa antes de cada teste: inicializa as páginas e faz login.
+    */
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         purchaseFlow = new PurchaseFlow(page);
         inventoryPage = new InventoryPage(page);
+        cartPage = new CartPage(page);
 
         // Navega para a página de login
         await loginPage.navigate();
@@ -43,19 +46,12 @@ test.describe('Fluxo de Compra', () => {
     });
 
     /**
-     * Teste: Comprar um item
-     * - Obtém os itens da lista de inventário.
-     * - Seleciona o primeiro item da lista.
-     * - Adiciona o item ao carrinho.
-     * - Navega para o carrinho e verifica se o item está presente.
-     * - Inicia o checkout, preenche o formulário e finaliza a compra.
-     * - Verifica a mensagem de confirmação e retorna para a página inicial.
-     */
+        * Teste: Comprar um item
+    */
     test('Comprar um item', async () => {
         // Obtém os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
-        const item = items[0]; // Usa o primeiro item da lista
-        console.log(item)
+        const item = items[0];
         // Clica no título do item para acessar a página de detalhes
         await purchaseFlow.clickItemTitle(item);
 
@@ -66,10 +62,10 @@ test.describe('Fluxo de Compra', () => {
         await purchaseFlow.goToCart();
 
         // Verifica se o item está no carrinho
-        expect(await inventoryPage.checkCartItem(item)).toBeTruthy();
+        expect(await cartPage.checkCartItem(item)).toBeTruthy();
 
         // Verifica se a quantidade de itens no carrinho é 1
-        expect(await inventoryPage.getCartItemCount()).toBe(1);
+        expect(await cartPage.getCartItemCount()).toBe(1);
 
         // Inicia o processo de checkout
         await purchaseFlow.startCheckout();
@@ -97,47 +93,8 @@ test.describe('Fluxo de Compra', () => {
     });
 
     /**
-     * Teste: Validar dados do produto entre a lista e o link do produto
-     * - Obtém os itens da lista de inventário.
-     * - Seleciona o primeiro item da lista.
-     * - Obtém os dados do item na lista de inventário (nome, preço e descrição).
-     * - Navega para a página de detalhes do item.
-     * - Obtém os dados do item na página de detalhes.
-     * - Compara os dados da lista de inventário com os da página de detalhes.
-     */
-    test('Validar dados do produto entre a lista e o link do produto', async () => {
-        // Obtém os itens da lista de inventário
-        const items = await inventoryPage.getInventoryItems();
-        const item = items[0]; // Usa o primeiro item da lista
-
-        // Obtém os dados do item na lista de inventário
-        const itemNameInInventory = await inventoryPage.getItemName(item);
-        const itemPriceInInventory = await inventoryPage.getItemPrice(item);
-        const itemDescriptionInInventory = await inventoryPage.getItemDescription(item);
-
-        // Clica no título do item para acessar a página de detalhes
-        await purchaseFlow.clickItemTitle(item);
-
-        // Obtém os dados do item na página de detalhes
-        const itemNameInDetails = await purchaseFlow.getItemName();
-        const itemPriceInDetails = await purchaseFlow.getItemPrice();
-        const itemDescriptionInDetails = await purchaseFlow.getItemDescription();
-
-        // Compara os dados da lista de inventário com os da página de detalhes
-        expect(itemNameInDetails).toBe(itemNameInInventory);
-        expect(itemPriceInDetails).toBe(itemPriceInInventory);
-        expect(itemDescriptionInDetails).toBe(itemDescriptionInInventory);
-    });
-
-    /**
-     * Teste: Validar cancelamento da compra
-     * - Obtém os itens da lista de inventário.
-     * - Seleciona o primeiro item da lista.
-     * - Adiciona o item ao carrinho.
-     * - Navega para o carrinho e verifica se o item está presente.
-     * - Inicia o checkout, preenche o formulário e cancela a compra.
-     * - Verifica se o usuário foi redirecionado para a página de inventário.
-     */
+        * Teste: Validar cancelamento da compra
+    */
     test('Validar cancelamento da compra', async () => {
         // Obtém os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
@@ -153,10 +110,10 @@ test.describe('Fluxo de Compra', () => {
         await purchaseFlow.goToCart();
 
         // Verifica se o item está no carrinho
-        expect(await inventoryPage.checkCartItem(item)).toBeTruthy();
+        expect(await cartPage.checkCartItem(item)).toBeTruthy();
 
         // Verifica se a quantidade de itens no carrinho é 1
-        expect(await inventoryPage.getCartItemCount()).toBe(1);
+        expect(await cartPage.getCartItemCount()).toBe(1);
 
         // Inicia o processo de checkout
         await purchaseFlow.startCheckout();
@@ -173,4 +130,8 @@ test.describe('Fluxo de Compra', () => {
         // Verifica se a URL atual é a página de inventário
         expect(await purchaseFlow.getCurrentUrl()).toBe('https://www.saucedemo.com/inventory.html');
     });
+
+
+    // Teste para problem_user
+
 });

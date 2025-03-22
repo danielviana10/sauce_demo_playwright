@@ -5,15 +5,23 @@ import { LoginCredentials } from "../interfaces/login.interface";
 import { PurchaseFlow } from "../pages/purchaseFlow";
 import { FormCheckout } from "../interfaces/form.interface";
 import { InventoryItem } from "../interfaces/inventory.interface";
+import { CartPage } from "../pages/cartPage";
 
 test.describe("Testes de Carrinho", () => {
   let loginPage: LoginPage;
   let inventoryPage: InventoryPage;
+  let cartPage: CartPage;
   let purchaseFlow: PurchaseFlow;
 
   // Credenciais de login válidas
   const credentials: LoginCredentials = {
     username: "standard_user",
+    password: "secret_sauce",
+  };
+
+  // Usuário com erro
+  const problemUserCredentials: LoginCredentials = {
+    username: "problem_user",
     password: "secret_sauce",
   };
 
@@ -28,6 +36,7 @@ test.describe("Testes de Carrinho", () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     inventoryPage = new InventoryPage(page);
+    cartPage = new CartPage(page);
     purchaseFlow = new PurchaseFlow(page);
 
     await loginPage.navigate();
@@ -35,7 +44,35 @@ test.describe("Testes de Carrinho", () => {
   });
 
   /*
-  * Teste: Adicionar vários itens ao carrinho
+    * Teste: Verificar se há pelo menos duas imagens repetidas na lista
+  */
+  test("Verificar se há duas imagens repetidas na lista", async () => {
+    // Desloga do usuário atual
+    await loginPage.logout();
+    // Loga no usuário com erros
+    await loginPage.login(problemUserCredentials);
+
+    const hasDuplicates = await inventoryPage.hasDuplicateImages();
+    // Espera que haja pelo menos duas imagens repetidas
+    expect(hasDuplicates).toBe(true);
+  });
+
+  /*
+    * Teste: Verificar se todas as imagens da lista são iguais
+  */
+  test("Verificar se todas as imagens da lista são iguais", async () => {
+    // Desloga do usuário atual
+    await loginPage.logout();
+    // Loga no usuário com erros
+    await loginPage.login(problemUserCredentials);
+
+    const areAllIdentical = await inventoryPage.areAllImagesIdentical();
+    // Espera que todas as imagens sejam iguais
+    expect(areAllIdentical).toBe(true);
+  });
+
+  /*
+    * Teste: Adicionar vários itens ao carrinho
   */
   test("Adicionar vários itens ao carrinho", async () => {
     // Extrai os itens da lista de inventário
@@ -47,20 +84,20 @@ test.describe("Testes de Carrinho", () => {
     }
 
     // Verifica se a quantidade de itens no carrinho está correta
-    const cartItemCount = await inventoryPage.getCartItemCount();
+    const cartItemCount = await cartPage.getCartItemCount();
     expect(cartItemCount).toBe(items.length);
 
     // Navega para o carrinho e verifica se todos os itens estão presentes
     await inventoryPage.goToCart();
 
     for (const item of items) {
-      const isItemInCart = await inventoryPage.checkCartItem(item);
+      const isItemInCart = await cartPage.checkCartItem(item);
       expect(isItemInCart).toBeTruthy();
     }
   });
 
   /*
-  * Teste: Adicionar um item específico ao carrinho
+    * Teste: Adicionar um item específico ao carrinho
   */
   test("Adicionar item ao carrinho", async () => {
     // Extrai os itens da lista de inventário
@@ -70,160 +107,110 @@ test.describe("Testes de Carrinho", () => {
     await inventoryPage.addItemToCart(item);
 
     // Verifica se a quantidade de itens no carrinho é 1
-    const cartItemCount = await inventoryPage.getCartItemCount();
+    const cartItemCount = await cartPage.getCartItemCount();
     expect(cartItemCount).toBe(1);
 
     // Navega para o carrinho e verifica se o item está presente
     await inventoryPage.goToCart();
-    const isItemInCart = await inventoryPage.checkCartItem(item);
+    const isItemInCart = await cartPage.checkCartItem(item);
     expect(isItemInCart).toBeTruthy();
   });
 
   /*
-  * Teste: Remover todos os itens do carrinho
+    * Teste: Verificar se o botão "Remove" não volta para "Add to cart" com problem_user
   */
-  test("Remover todos os itens do carrinho", async () => {
-    // Extrai os itens da lista de inventário
+  test("Verificar comportamento do botão Remove com problem_user", async () => {
+    // Faz logout do usuário atual
+    await loginPage.logout();
+
+    // Faz login com o problem_user
+    await loginPage.login(problemUserCredentials);
+
+    // Obtém os itens da lista de inventário
     const items = await inventoryPage.getInventoryItems();
+    const item = items[0];
 
-    // Adiciona todos os itens ao carrinho
-    for (const item of items) {
-      await inventoryPage.addItemToCart(item);
-    }
-
-    // Navega para o carrinho e remove cada item
-    await inventoryPage.goToCart();
-    for (const item of items) {
-      await inventoryPage.removeItemFromCart(item);
-    }
-
-    // Verifica se todos os itens foram removidos
-    for (const item of items) {
-      const isItemInCart = await inventoryPage.checkCartItem(item);
-      expect(isItemInCart).toBeFalsy();
-    }
-  });
-
-
-  /*
-  * Teste: Remover um item específico do carrinho
-  */
-  test("Remover item do carrinho", async () => {
-    // Extrai os itens da lista de inventário
-    const items = await inventoryPage.getInventoryItems();
-    const item = items[0]; // Usa o primeiro item da lista
-
+    // Adiciona o item ao carrinho
     await inventoryPage.addItemToCart(item);
 
-    // Navega para o carrinho e remove o item
-    await inventoryPage.goToCart();
+    // Verifica se o botão "Remove" está visível
+    const isRemoveButtonVisible = await inventoryPage.isRemoveButtonVisible(item);
+    // Espera que o botão "Remove" esteja visível
+    expect(isRemoveButtonVisible).toBe(true);
+
+    // Remove o item do carrinho
     await inventoryPage.removeItemFromCart(item);
 
-    // Verifica se o item foi removido
-    const isItemInCart = await inventoryPage.checkCartItem(item);
-    expect(isItemInCart).toBeFalsy();
+    // Verifica se o botão "Add to cart" NÃO está visível
+    const isAddToCartButtonVisible = await inventoryPage.isAddToCartButtonVisible(item);
+    // Espera que o botão "Add to cart" NÃO esteja visível
+    expect(isAddToCartButtonVisible).toBe(false);
   });
 
-  /*
-  * Teste: Verificar e remover um produto do carrinho (se estiver presente)
+  /**
+    * Teste: Validar dados do produto entre a lista e o link do produto no usuário comum
   */
-  test("Verificar e remover produto do carrinho", async () => {
-    // Extrai os itens da lista de inventário
-    const items = await inventoryPage.getInventoryItems();
-    const item = items[0]; // Usa o primeiro item da lista
-
-    await inventoryPage.goToCart();
-
-    // Verifica se o item está no carrinho
-    const isItemInCart = await inventoryPage.checkCartItem(item);
-
-    // Se o item estiver no carrinho, remove-o
-    if (isItemInCart) {
-      await inventoryPage.removeItemFromCart(item);
-    }
-
-    // Verifica se o item foi removido
-    const isItemRemoved = await inventoryPage.checkCartItem(item);
-    expect(isItemRemoved).toBeFalsy();
-  });
-
-  /*
-  * Teste: Remover um item específico do carrinho (mantendo outros itens)
-  */
-  test("Remover um item específico do carrinho", async () => {
-    // Extrai os itens da lista de inventário
+  test('Validar se todos os itens são iguais entre a lista e o detalhamento', async () => {
+    // Obtém os itens da lista de inventário
     const items = await inventoryPage.getInventoryItems();
 
-    // Adiciona todos os itens ao carrinho
+    // Itera sobre todos os itens da lista de inventário
     for (const item of items) {
-      await inventoryPage.addItemToCart(item);
-    }
+      // Clica no título do item para acessar a página de detalhes
+      await purchaseFlow.clickItemTitle(item);
 
-    // Navega para o carrinho e remove o primeiro item
-    await inventoryPage.goToCart();
-    await inventoryPage.removeItemFromCart(items[0]);
+      // Obtém os dados do item na página de detalhes
+      const itemNameInDetails = await purchaseFlow.getItemDetailsName();
+      const itemPriceInDetails = await purchaseFlow.getItemDetailsPrice();
+      const itemDescriptionInDetails = await purchaseFlow.getItemDetailsDescription();
+      const itemImageSrcInDetails = await purchaseFlow.getItemDetailsImageSrc();
 
-    // Verifica se o primeiro item foi removido
-    const isFirstItemInCart = await inventoryPage.checkCartItem(items[0]);
-    expect(isFirstItemInCart).toBeFalsy();
+      // Verifica se os dados do item na página de detalhes são diferentes dos dados do item clicado
+      expect(itemNameInDetails).toBe(item.name);
+      expect(itemPriceInDetails).toBe(item.price);
+      expect(itemDescriptionInDetails).toBe(item.description);
 
-    // Verifica se o segundo item ainda está no carrinho
-    const isSecondItemInCart = await inventoryPage.checkCartItem(items[1]);
-    expect(isSecondItemInCart).toBeTruthy();
-  });
-
-  /*
-  * Teste: Verificar se os itens do carrinho correspondem aos adicionados
-  */
-  test("Verificar se os itens do carrinho são os mesmos que foram adicionados", async () => {
-    // Extrai os itens da lista de inventário
-    const items = await inventoryPage.getInventoryItems();
-
-    // Adiciona todos os itens ao carrinho
-    for (const item of items) {
-      await inventoryPage.addItemToCart(item);
-    }
-
-    // Navega para o carrinho e verifica se os itens correspondem
-    await inventoryPage.goToCart();
-
-    for (const item of items) {
-      const itemNameInCart = await inventoryPage.getCartItemName(item);
-      expect(itemNameInCart).toBe(item.name);
-
-      const itemDescriptionInCart = await inventoryPage.getCartItemDescription(item);
-      expect(itemDescriptionInCart).toBe(item.description);
-
-      const itemPriceInCart = await inventoryPage.getCartItemPrice(item);
-      expect(itemPriceInCart).toBe(item.price);
+      // Volta para a lista de inventário
+      await purchaseFlow.backToHome();
     }
   });
 
-  /*
-  * Teste: Verificar se os itens do checkout são os mesmos itens do carrinho
+  /**
+    * Teste: Validar dados do produto entre a lista e o link do produto no usuário com problema
   */
-  test("Verificar se os itens do checkout são os mesmos itens do carrinho", async () => {
-    // Extrai os itens da lista de inventário
+  test('Validar se todos os itens são diferentes entre a lista e o detalhamento', async () => {
+    // Faz logout do usuário atual
+    await loginPage.logout();
+
+    // Faz login com o problem_user
+    await loginPage.login(problemUserCredentials);
+
+    // Obtém os itens da lista de inventário
     const items = await inventoryPage.getInventoryItems();
 
-    // Adiciona todos os itens ao carrinho
+    // Itera sobre todos os itens da lista de inventário
     for (const item of items) {
-      await inventoryPage.addItemToCart(item);
+      // Clica no título do item para acessar a página de detalhes
+      await purchaseFlow.clickItemTitle(item);
+
+      // Obtém os dados do item na página de detalhes
+      const itemNameInDetails = await purchaseFlow.getItemDetailsName();
+      const itemPriceInDetails = await purchaseFlow.getItemDetailsPrice();
+      const itemDescriptionInDetails = await purchaseFlow.getItemDetailsDescription();
+      const itemImageSrcInDetails = await purchaseFlow.getItemDetailsImageSrc();
+
+      // Verifica se os dados do item na página de detalhes são diferentes dos dados do item clicado
+      expect(itemNameInDetails).not.toBe(item.name);
+      expect(itemPriceInDetails).not.toBe(item.price);
+      expect(itemDescriptionInDetails).not.toBe(item.description);
+
+      // Verifica se a imagem é diferente OU é a imagem padrão (sl-404)
+      expect(
+        itemImageSrcInDetails !== item.imageSrc || itemImageSrcInDetails.includes('sl-404')
+      ).toBeTruthy();
+
+      // Volta para a lista de inventário
+      await purchaseFlow.backToHome();
     }
-
-    // Navega para o carrinho e obtém os itens
-    await inventoryPage.goToCart();
-    const cartItems = await inventoryPage.getInventoryItems();
-
-    // Inicia o checkout, preenche o formulário e navega para a página de checkout overview
-    await purchaseFlow.startCheckout();
-    await purchaseFlow.fillCheckoutForm(data);
-    await purchaseFlow.continueToCheckoutOverview();
-
-    // Obtém os itens do checkout overview
-    const checkoutOverviewItems = await inventoryPage.getInventoryItems();
-
-    // Compara os itens do carrinho com os do checkout overview
-    expect(cartItems).toEqual(checkoutOverviewItems);
   });
 });

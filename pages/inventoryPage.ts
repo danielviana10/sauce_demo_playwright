@@ -1,6 +1,7 @@
 import { Page } from "@playwright/test";
 import { InventoryItem } from "../interfaces/inventory.interface";
 import { getInventoryItems } from "../utils/getInventoryItems";
+import { compareImages } from "../utils/imageComparator";
 
 export class InventoryPage {
     private page: Page;
@@ -30,8 +31,8 @@ export class InventoryPage {
     }
 
     /**
-     * Adiciona um item ao carrinho.
-     * @param item - O item a ser adicionado.
+         * Adiciona um item ao carrinho.
+         * @param item - O item a ser adicionado.
      */
     async addItemToCart(item: InventoryItem) {
         const addButtonDataTest = this.generateButtonDataTest(item, 'add');
@@ -46,8 +47,8 @@ export class InventoryPage {
     }
 
     /**
-     * Remove um item do carrinho.
-     * @param item - O item a ser removido.
+        * Remove um item do carrinho.
+        * @param item - O item a ser removido.
      */
     async removeItemFromCart(item: InventoryItem) {
         const removeButtonDataTest = this.generateButtonDataTest(item, 'remove');
@@ -55,6 +56,26 @@ export class InventoryPage {
         // Espera o botão de remover estar visível
         await this.page.waitForSelector(`[data-test="${removeButtonDataTest}"]`, { state: 'visible' });
         await this.page.click(`[data-test="${removeButtonDataTest}"]`);
+    }
+
+    /**
+        * Verifica se o botão "Remove" está visível para um item.
+        * @param item - O item do inventário.
+        * @returns `true` se o botão "Remove" estiver visível, caso contrário, `false`.
+    */
+    async isRemoveButtonVisible(item: InventoryItem): Promise<boolean> {
+        const removeButtonDataTest = this.generateButtonDataTest(item, 'remove');
+        return this.page.locator(`[data-test="${removeButtonDataTest}"]`).isVisible();
+    }
+
+    /**
+         * Verifica se o botão "Add to cart" está visível para um item.
+         * @param item - O item do inventário.
+         * @returns `true` se o botão "Add to cart" estiver visível, caso contrário, `false`.
+     */
+    async isAddToCartButtonVisible(item: InventoryItem): Promise<boolean> {
+        const addButtonDataTest = this.generateButtonDataTest(item, 'add');
+        return this.page.locator(`[data-test="${addButtonDataTest}"]`).isVisible();
     }
 
     /**
@@ -86,57 +107,10 @@ export class InventoryPage {
     }
 
     /**
-     * Obtém o nome de um item no carrinho.
-     * @param item - O item do inventário.
-     * @returns O nome do item no carrinho.
-     */
-    async getCartItemName(item: InventoryItem): Promise<string> {
-        return this.page.locator(`.cart_item:has-text("${item.name}") [data-test="inventory-item-name"]`).innerText();
-    }
-
-    /**
-     * Obtém a descrição de um item no carrinho.
-     * @param item - O item do inventário.
-     * @returns A descrição do item no carrinho.
-     */
-    async getCartItemDescription(item: InventoryItem): Promise<string> {
-        return this.page.locator(`.cart_item:has-text("${item.name}") [data-test="inventory-item-desc"]`).innerText();
-    }
-
-    /**
-     * Obtém o preço de um item no carrinho.
-     * @param item - O item do inventário.
-     * @returns O preço do item no carrinho.
-     */
-    async getCartItemPrice(item: InventoryItem): Promise<number> {
-        const priceText = await this.page.locator(`.cart_item:has-text("${item.name}") [data-test="inventory-item-price"]`).innerText();
-        return parseFloat(priceText.replace('$', ''));
-    }
-
-    /**
-     * Obtém a quantidade de itens no carrinho.
-     * @returns A quantidade de itens no carrinho.
-     */
-    async getCartItemCount() {
-        const cartCount = await this.page.locator('.shopping_cart_badge').textContent();
-        return cartCount ? parseInt(cartCount) : 0;
-    }
-
-    /**
      * Navega para a página do carrinho.
      */
     async goToCart() {
         await this.page.locator('[data-test="shopping-cart-link"]').click();
-    }
-
-    /**
-     * Verifica se um item está no carrinho.
-     * @param item - O item a ser verificado.
-     * @returns `true` se o item estiver no carrinho, caso contrário, `false`.
-     */
-    async checkCartItem(item: InventoryItem): Promise<boolean> {
-        const itemInCart = await this.page.locator(`.cart_item:has-text("${item.name}")`).isVisible();
-        return itemInCart;
     }
 
     /**
@@ -165,4 +139,80 @@ export class InventoryPage {
         const itemPrices = await this.page.locator('.inventory_item_price').allTextContents();
         return itemPrices.map(price => parseFloat(price.replace('$', '')));
     }
+
+    /**
+     * Captura um screenshot de um item do inventário.
+     * @param item - O item do inventário.
+     * @param screenshotPath - Caminho para salvar o screenshot.
+     */
+    async takeItemScreenshot(item: InventoryItem, screenshotPath: string): Promise<void> {
+        // Usa o seletor correto para o elemento da imagem
+        const itemImageElement = this.page.locator(`[data-test="item-${item.id}-img-link"]`);
+
+        // Espera o elemento estar visível antes de capturar o screenshot
+        await itemImageElement.waitFor({ state: 'visible' });
+
+        // Captura o screenshot
+        await itemImageElement.screenshot({ path: screenshotPath });
+    }
+
+    /**
+     * Verifica se há pelo menos duas imagens repetidas na lista.
+     * @returns `true` se houver pelo menos duas imagens repetidas, caso contrário, `false`.
+     */
+    async hasDuplicateImages(): Promise<boolean> {
+        const items = await this.getInventoryItems();
+
+        // Captura screenshots de todos os itens
+        const screenshotPaths: string[] = [];
+        for (let i = 0; i < items.length; i++) {
+            const screenshotPath = `screenshots/item_${i}.png`;
+            await this.takeItemScreenshot(items[i], screenshotPath);
+            screenshotPaths.push(screenshotPath);
+        }
+
+        // Compara as imagens
+        for (let i = 0; i < screenshotPaths.length; i++) {
+            for (let j = i + 1; j < screenshotPaths.length; j++) {
+                const numDiffPixels = compareImages(screenshotPaths[i], screenshotPaths[j]);
+
+                // Se as imagens forem idênticas (0 pixels diferentes), retorna true
+                if (numDiffPixels === 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Verifica se todas as imagens da lista são iguais.
+     * @returns `true` se todas as imagens forem iguais, caso contrário, `false`.
+     */
+    async areAllImagesIdentical(): Promise<boolean> {
+        const items = await this.getInventoryItems();
+
+        // Captura screenshots de todos os itens
+        const screenshotPaths: string[] = [];
+        for (let i = 0; i < items.length; i++) {
+            const screenshotPath = `screenshots/item_${i}.png`;
+            await this.takeItemScreenshot(items[i], screenshotPath);
+            screenshotPaths.push(screenshotPath);
+        }
+
+        // Compara todas as imagens com a primeira imagem
+        const firstImagePath = screenshotPaths[0];
+        for (let i = 1; i < screenshotPaths.length; i++) {
+            const numDiffPixels = compareImages(firstImagePath, screenshotPaths[i]);
+
+            // Se houver diferenças, retorna false
+            if (numDiffPixels > 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

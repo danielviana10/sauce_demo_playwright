@@ -3,4 +3,5 @@ export interface InventoryItem {
   price: number;
   id: string;
   description: string;
+  imageSrc?: string;
 }
