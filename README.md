@@ -30,8 +30,8 @@ Foram implementados os seguintes cenários de teste:
 - **[Node.js](https://nodejs.org/):** Ambiente de execução Typescript.
 - **[Git](https://git-scm.com/):** Controle de versão.
 - **[GitHub](https://github.com/):** Hospedagem do repositório.
-- **[Pixelmatch]([https://github.com/](https://www.npmjs.com/package/pixelmatch/v/1.1.0)):** Biblioteca de comparação de imagens.
-- **[PNGjg]([https://www.npmjs.com/package/pngjs]):** Biblioteca codificadora/decodificador para Nodejs
+- **[Pixelmatch]([https://github.com/](https://www.npmjs.com/package/pixelmatch/v/1.1.0/)):** Biblioteca de comparação de imagens.
+- **[PNGjg]([https://www.npmjs.com/package/pngjs/]):** Biblioteca codificadora/decodificador para Nodejs
 
 ## Pré-requisitos
 
