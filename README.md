@@ -86,19 +86,33 @@ Após a execução dos testes, um relatório HTML será gerado automaticamente. 
 
 ### 5. Estrutura do projeto
 /projeto-playwright/
+
 ├── tests/               # Casos de teste
+
 │   ├── login.spec.ts    # Testes de login
+
 │   ├── cart.spec.ts     # Testes de carrinho
+
 │   └── ...              # Outros testes
+
 ├── pages/               # Page Objects
+
 │   ├── LoginPage.ts     # Página de login
+
 │   ├── CartPage.ts      # Página do carrinho
+
 │   └── ...              # Outras páginas
+
 ├── utils/               # Utilitários e helpers
+
 │   ├── getInventory.ts  # Constantes reutilizáveis
+
 │   └── imageCompare.ts  # Funções auxiliares
+
 ├── playwright.config.ts # Configurações do Playwright
+
 ├── package.json         # Dependências do projeto
+
 └── README.md            # Documentação do projeto
 
 ### 6. Boas práticas adotadas
