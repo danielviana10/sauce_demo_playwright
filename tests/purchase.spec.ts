@@ -13,11 +13,29 @@ test.describe('Fluxo de Compra', () => {
     let inventoryPage: InventoryPage;
     let cartPage: CartPage
 
+    // Credenciais de login válidas
+    const credentials: LoginCredentials = {
+        username: "standard_user",
+        password: "secret_sauce",
+    };
+
     // Dados do formulário de checkout
     const data: FormCheckout = {
         firstName: 'Daniel',
         lastName: 'Viana',
         zipCode: '06406150',
+    };
+
+    // Usuário com problema
+    const problemUserCredentials: LoginCredentials = {
+        username: "problem_user",
+        password: "secret_sauce",
+    };
+
+    // Usuário com erro
+    const errorUserCredentials: LoginCredentials = {
+        username: "error_user",
+        password: "secret_sauce",
     };
 
     /**
@@ -31,12 +49,6 @@ test.describe('Fluxo de Compra', () => {
 
         // Navega para a página de login
         await loginPage.navigate();
-
-        // Credenciais de login válidas
-        const credentials: LoginCredentials = {
-            username: "standard_user",
-            password: "secret_sauce",
-        };
 
         // Realiza o login
         await loginPage.login(credentials);
@@ -130,8 +142,4 @@ test.describe('Fluxo de Compra', () => {
         // Verifica se a URL atual é a página de inventário
         expect(await purchaseFlow.getCurrentUrl()).toBe('https://www.saucedemo.com/inventory.html');
     });
-
-
-    // Teste para problem_user
-
 });

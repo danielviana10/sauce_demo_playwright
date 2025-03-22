@@ -33,7 +33,7 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     // launchOptions: {
-    //   slowMo: 1000, // Adiciona 1 segundo de atraso entre as ações
+    //   slowMo: 500, // Adiciona 1 segundo de atraso entre as ações
     // },
   },
 

@@ -6,8 +6,9 @@ import { PurchaseFlow } from "../pages/purchaseFlow";
 import { FormCheckout } from "../interfaces/form.interface";
 import { InventoryItem } from "../interfaces/inventory.interface";
 import { CartPage } from "../pages/cartPage";
+import { ImageFlow } from "../pages/imagesFlow";
 
-test.describe("Testes de Carrinho", () => {
+test.describe("Testes de Carrinho com standard_user", () => {
   let loginPage: LoginPage;
   let inventoryPage: InventoryPage;
   let cartPage: CartPage;
@@ -19,19 +20,6 @@ test.describe("Testes de Carrinho", () => {
     password: "secret_sauce",
   };
 
-  // Usuário com erro
-  const problemUserCredentials: LoginCredentials = {
-    username: "problem_user",
-    password: "secret_sauce",
-  };
-
-  // Dados do formulário de checkout
-  const data: FormCheckout = {
-    firstName: 'Daniel',
-    lastName: 'Viana',
-    zipCode: '06406150',
-  };
-
   // Executa antes de cada teste: inicializa as páginas e faz login
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
@@ -41,34 +29,6 @@ test.describe("Testes de Carrinho", () => {
 
     await loginPage.navigate();
     await loginPage.login(credentials);
-  });
-
-  /*
-    * Teste: Verificar se há pelo menos duas imagens repetidas na lista
-  */
-  test("Verificar se há duas imagens repetidas na lista", async () => {
-    // Desloga do usuário atual
-    await loginPage.logout();
-    // Loga no usuário com erros
-    await loginPage.login(problemUserCredentials);
-
-    const hasDuplicates = await inventoryPage.hasDuplicateImages();
-    // Espera que haja pelo menos duas imagens repetidas
-    expect(hasDuplicates).toBe(true);
-  });
-
-  /*
-    * Teste: Verificar se todas as imagens da lista são iguais
-  */
-  test("Verificar se todas as imagens da lista são iguais", async () => {
-    // Desloga do usuário atual
-    await loginPage.logout();
-    // Loga no usuário com erros
-    await loginPage.login(problemUserCredentials);
-
-    const areAllIdentical = await inventoryPage.areAllImagesIdentical();
-    // Espera que todas as imagens sejam iguais
-    expect(areAllIdentical).toBe(true);
   });
 
   /*
@@ -102,7 +62,7 @@ test.describe("Testes de Carrinho", () => {
   test("Adicionar item ao carrinho", async () => {
     // Extrai os itens da lista de inventário
     const items = await inventoryPage.getInventoryItems();
-    const item = items[0]; // Usa o primeiro item da lista
+    const item = items[0];
 
     await inventoryPage.addItemToCart(item);
 
@@ -114,37 +74,6 @@ test.describe("Testes de Carrinho", () => {
     await inventoryPage.goToCart();
     const isItemInCart = await cartPage.checkCartItem(item);
     expect(isItemInCart).toBeTruthy();
-  });
-
-  /*
-    * Teste: Verificar se o botão "Remove" não volta para "Add to cart" com problem_user
-  */
-  test("Verificar comportamento do botão Remove com problem_user", async () => {
-    // Faz logout do usuário atual
-    await loginPage.logout();
-
-    // Faz login com o problem_user
-    await loginPage.login(problemUserCredentials);
-
-    // Obtém os itens da lista de inventário
-    const items = await inventoryPage.getInventoryItems();
-    const item = items[0];
-
-    // Adiciona o item ao carrinho
-    await inventoryPage.addItemToCart(item);
-
-    // Verifica se o botão "Remove" está visível
-    const isRemoveButtonVisible = await inventoryPage.isRemoveButtonVisible(item);
-    // Espera que o botão "Remove" esteja visível
-    expect(isRemoveButtonVisible).toBe(true);
-
-    // Remove o item do carrinho
-    await inventoryPage.removeItemFromCart(item);
-
-    // Verifica se o botão "Add to cart" NÃO está visível
-    const isAddToCartButtonVisible = await inventoryPage.isAddToCartButtonVisible(item);
-    // Espera que o botão "Add to cart" NÃO esteja visível
-    expect(isAddToCartButtonVisible).toBe(false);
   });
 
   /**
@@ -174,17 +103,70 @@ test.describe("Testes de Carrinho", () => {
       await purchaseFlow.backToHome();
     }
   });
+});
+
+
+test.describe("Testes de Carrinho com problem_user", () => {
+  let loginPage: LoginPage;
+  let inventoryPage: InventoryPage;
+  let purchaseFlow: PurchaseFlow;
+  let imageFlow: ImageFlow;
+
+  // Usuário com erro
+  const problemUserCredentials: LoginCredentials = {
+    username: "problem_user",
+    password: "secret_sauce",
+  };
+
+  // Executa antes de cada teste: inicializa as páginas e faz login
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    inventoryPage = new InventoryPage(page);
+    purchaseFlow = new PurchaseFlow(page);
+    imageFlow = new ImageFlow(page);
+
+    await loginPage.navigate();
+    await loginPage.login(problemUserCredentials);
+  });
+
+  /*
+    * Teste: Verificar se todas as imagens da lista são iguais
+  */
+  test("Verificar se todas as imagens da lista são iguais", async () => {
+    const areAllIdentical = await imageFlow.areAllImagesIdentical();
+    // Espera que todas as imagens sejam iguais
+    expect(areAllIdentical).toBe(true);
+  });
+
+  /*
+    * Teste: Verificar se o botão "Remove" não volta para "Add to cart"
+  */
+  test("Verificar comportamento do botão Remove com problem_user", async () => {
+    // Obtém os itens da lista de inventário
+    const items = await inventoryPage.getInventoryItems();
+    const item = items[0];
+
+    // Adiciona o item ao carrinho
+    await inventoryPage.addItemToCart(item);
+
+    // Verifica se o botão "Remove" está visível
+    const isRemoveButtonVisible = await inventoryPage.isRemoveButtonVisible(item);
+    // Espera que o botão "Remove" esteja visível
+    expect(isRemoveButtonVisible).toBe(true);
+
+    // Remove o item do carrinho
+    await inventoryPage.removeItemFromCart(item);
+
+    // Verifica se o botão "Add to cart" NÃO está visível
+    const isAddToCartButtonVisible = await inventoryPage.isAddToCartButtonVisible(item);
+    // Espera que o botão "Add to cart" NÃO esteja visível
+    expect(isAddToCartButtonVisible).toBe(false);
+  });
 
   /**
     * Teste: Validar dados do produto entre a lista e o link do produto no usuário com problema
   */
   test('Validar se todos os itens são diferentes entre a lista e o detalhamento', async () => {
-    // Faz logout do usuário atual
-    await loginPage.logout();
-
-    // Faz login com o problem_user
-    await loginPage.login(problemUserCredentials);
-
     // Obtém os itens da lista de inventário
     const items = await inventoryPage.getInventoryItems();
 

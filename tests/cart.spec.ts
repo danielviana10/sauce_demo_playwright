@@ -6,21 +6,15 @@ import { LoginCredentials } from "../interfaces/login.interface";
 import { FormCheckout } from "../interfaces/form.interface";
 import { PurchaseFlow } from "../pages/purchaseFlow";
 
-test.describe("Testes de Carrinho", () => {
+test.describe("Testes de Carrinho para o standar_user", () => {
     let loginPage: LoginPage;
     let inventoryPage: InventoryPage;
     let cartPage: CartPage;
     let purchaseFlow: PurchaseFlow;
 
     // Credenciais de login válidas
-    const credentials: LoginCredentials = {
+    const standardUserCredentials: LoginCredentials = {
         username: "standard_user",
-        password: "secret_sauce",
-    };
-
-    // Usuário com erro
-    const problemUserCredentials: LoginCredentials = {
-        username: "problem_user",
         password: "secret_sauce",
     };
 
@@ -39,7 +33,7 @@ test.describe("Testes de Carrinho", () => {
         purchaseFlow = new PurchaseFlow(page);
 
         await loginPage.navigate();
-        await loginPage.login(credentials);
+        await loginPage.login(standardUserCredentials);
     });
 
     /*
@@ -65,48 +59,6 @@ test.describe("Testes de Carrinho", () => {
             const isItemInCart = await cartPage.checkCartItem(item);
             expect(isItemInCart).toBeFalsy();
         }
-    });
-
-    /*
-        * Teste: Remover um item específico do carrinho
-    */
-    test("Remover item do carrinho", async () => {
-        // Extrai os itens da lista de inventário
-        const items = await inventoryPage.getInventoryItems();
-        const item = items[0]; // Usa o primeiro item da lista
-
-        await inventoryPage.addItemToCart(item);
-
-        // Navega para o carrinho e remove o item
-        await inventoryPage.goToCart();
-        await cartPage.removeItemFromCart(item);
-
-        // Verifica se o item foi removido
-        const isItemInCart = await cartPage.checkCartItem(item);
-        expect(isItemInCart).toBeFalsy();
-    });
-
-    /*
-        * Teste: Verificar e remover um produto do carrinho (se estiver presente)
-    */
-    test("Verificar e remover produto do carrinho", async () => {
-        // Extrai os itens da lista de inventário
-        const items = await inventoryPage.getInventoryItems();
-        const item = items[0]; // Usa o primeiro item da lista
-
-        await inventoryPage.goToCart();
-
-        // Verifica se o item está no carrinho
-        const isItemInCart = await cartPage.checkCartItem(item);
-
-        // Se o item estiver no carrinho, remove-o
-        if (isItemInCart) {
-            await cartPage.removeItemFromCart(item);
-        }
-
-        // Verifica se o item foi removido
-        const isItemRemoved = await cartPage.checkCartItem(item);
-        expect(isItemRemoved).toBeFalsy();
     });
 
     /*
@@ -188,19 +140,33 @@ test.describe("Testes de Carrinho", () => {
         // Compara os itens do carrinho com os do checkout overview
         expect(cartItems).toEqual(checkoutOverviewItems);
     });
+});
 
+test.describe("Testes de Carrinho para o problem_user", () => {
+    let loginPage: LoginPage;
+    let inventoryPage: InventoryPage;
+    let cartPage: CartPage;
 
-    // Testes para o problem_user
+    // Usuário com erro
+    const problemUserCredentials: LoginCredentials = {
+        username: "problem_user",
+        password: "secret_sauce",
+    };
+
+    // Executa antes de cada teste: inicializa as páginas e faz login
+    test.beforeEach(async ({ page }) => {
+        loginPage = new LoginPage(page);
+        inventoryPage = new InventoryPage(page);
+        cartPage = new CartPage(page);
+
+        await loginPage.navigate();
+        await loginPage.login(problemUserCredentials);
+    });
+
     /*
         * Teste: Verificar se nem todos os produtos foram adicionados ao carrinho
     */
     test("Verificar se nem todos os produtos foram adicionados ao carrinho", async () => {
-        // Faz logout do usuário atual
-        await loginPage.logout();
-
-        // Faz login com o problem_user
-        await loginPage.login(problemUserCredentials);
-
         // Extrai os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
 

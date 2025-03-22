@@ -32,7 +32,7 @@ export function compareImages(imgPath1: string, imgPath2: string, diffPath?: str
         { threshold: 0.1 }
     );
 
-    // Salva a imagem de diferença (opcional)
+    // Salva a imagem de diferença
     if (diffPath) {
         writeFileSync(diffPath, PNG.sync.write(diff));
     }
