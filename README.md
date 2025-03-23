@@ -187,7 +187,7 @@ Após a execução dos testes, um relatório HTML será gerado automaticamente. 
 ### 6. Boas práticas adotadas
 
 - Page Object Model (POM): Separação das páginas da aplicação em classes para facilitar a manutenção e reutilização do código.
-
+ 
 - Testes Independentes: Cada teste é independente e pode ser executado separadamente.
 
 - Relatórios Automatizados: Geração de relatórios detalhados após a execução dos testes.
