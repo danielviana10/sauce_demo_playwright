@@ -6,7 +6,7 @@ Este projeto foi desenvolvido como parte do desafio técnico para a vaga de SDET
 
 ## Documentação
 
-A documentação do projeto está disponível em: [https://<seu-usuario>.github.io/<nome-do-repositorio>/](https://<seu-usuario>.github.io/<nome-do-repositorio>/)
+A documentação do projeto está disponível em: [https://danielviana10.github.io/sauce_demo_playwright/](https://danielviana10.github.io/sauce_demo_playwright/)
 
 ---
 
