@@ -4,6 +4,12 @@ Este projeto foi desenvolvido como parte do desafio técnico para a vaga de SDET
 
 ---
 
+## Documentação
+
+A documentação do projeto está disponível em: [https://<seu-usuario>.github.io/<nome-do-repositorio>/](https://<seu-usuario>.github.io/<nome-do-repositorio>/)
+
+---
+
 ## **Funcionalidades**
 
 - **Automação de testes:** Criação de casos de teste para validar funcionalidades da aplicação Sauce Demo.
