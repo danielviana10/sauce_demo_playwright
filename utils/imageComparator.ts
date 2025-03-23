@@ -8,6 +8,7 @@ import pixelmatch from 'pixelmatch';
  * @param imgPath2 - Caminho da segunda imagem.
  * @param diffPath - Caminho para salvar a imagem de diferença (opcional).
  * @returns Número de pixels diferentes.
+ * @throws {Error} Se as imagens não tiverem o mesmo tamanho.
  */
 export function compareImages(imgPath1: string, imgPath2: string, diffPath?: string): number {
     // Carrega as imagens

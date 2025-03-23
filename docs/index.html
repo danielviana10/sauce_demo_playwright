@@ -1,0 +1,141 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>sauce_demo_playwright</title><meta name="description" content="Documentation for sauce_demo_playwright"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">sauce_demo_playwright</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>sauce_demo_playwright</h1></div><div class="tsd-panel tsd-typography"><h1 id="automação-de-testes-com-playwright---sauce-demo" class="tsd-anchor-link">Automação de Testes com Playwright - Sauce Demo<a href="#automação-de-testes-com-playwright---sauce-demo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>Este projeto foi desenvolvido como parte do desafio técnico para a vaga de SDET na voidr. O objetivo é automatizar testes end-to-end (E2E) para a aplicação web <strong>Sauce Demo</strong> utilizando o framework <strong>Playwright</strong>. O projeto abrange testes de login, carrinho, inventário, ordenação, formulário de checkout e fluxo de compra.</p>
+<hr>
+<h2 id="funcionalidades" class="tsd-anchor-link"><strong>Funcionalidades</strong><a href="#funcionalidades" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><strong>Automação de testes:</strong> Criação de casos de teste para validar funcionalidades da aplicação Sauce Demo.</li>
+<li><strong>Page Objects:</strong> Uso do padrão Page Object Model (POM) para organizar o código e facilitar a manutenção.</li>
+<li><strong>Relatórios:</strong> Geração de relatórios de execução dos testes.</li>
+<li><strong>Multiplataforma:</strong> Execução dos testes em diferentes navegadores (Chromium, Firefox, WebKit).</li>
+<li><strong>Comparação de Imagens:</strong> Utilização de bibliotecas como <code>pixelmatch</code> e <code>pngjs</code> para validação de imagens.</li>
+<li><strong>Documentação Automatizada:</strong> Geração de documentação com TypeDoc para descrever a estrutura do projeto e os testes.</li>
+</ul>
+<hr>
+<h2 id="cenários-de-teste-automatizados" class="tsd-anchor-link"><strong>Cenários de Teste Automatizados</strong><a href="#cenários-de-teste-automatizados" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Foram implementados os seguintes cenários de teste:</p>
+<h3 id="login" class="tsd-anchor-link"><strong>Login</strong><a href="#login" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li><strong>Login com credenciais válidas:</strong> Valida o login com usuário e senha corretos.</li>
+<li><strong>Login com credenciais inválidas:</strong> Verifica a mensagem de erro ao usar credenciais incorretas.</li>
+<li><strong>Login com usuário bloqueado:</strong> Valida o comportamento ao tentar logar com um usuário bloqueado.</li>
+<li><strong>Login com usuário com problemas de performance:</strong> Verifica o comportamento ao logar com um usuário que simula atrasos.</li>
+</ol>
+<h3 id="carrinho" class="tsd-anchor-link"><strong>Carrinho</strong><a href="#carrinho" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol start="5">
+<li><strong>Adicionar item ao carrinho:</strong> Testa a funcionalidade de adicionar um produto ao carrinho.</li>
+<li><strong>Remover item do carrinho:</strong> Valida a remoção de um item do carrinho.</li>
+<li><strong>Verificar itens no carrinho:</strong> Confirma se os itens adicionados ao carrinho correspondem aos esperados.</li>
+<li><strong>Verificar comportamento do carrinho com <code>problem_user</code>:</strong> Testa o comportamento do carrinho para um usuário com problemas no sistema.</li>
+</ol>
+<h3 id="inventário" class="tsd-anchor-link"><strong>Inventário</strong><a href="#inventário" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol start="9">
+<li><strong>Ordenação de produtos por nome (A-Z e Z-A):</strong> Verifica a ordenação dos produtos por nome.</li>
+<li><strong>Ordenação de produtos por preço (menor para maior e maior para menor):</strong> Valida a ordenação dos produtos por preço.</li>
+<li><strong>Verificação de detalhes do produto:</strong> Testa a exibição correta dos detalhes de um produto.</li>
+</ol>
+<h3 id="formulário-de-checkout" class="tsd-anchor-link"><strong>Formulário de Checkout</strong><a href="#formulário-de-checkout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol start="12">
+<li><strong>Validação de campos obrigatórios:</strong> Verifica se os campos do formulário de checkout são validados corretamente.</li>
+<li><strong>Envio do formulário com dados válidos:</strong> Testa o fluxo de preenchimento e envio do formulário de checkout.</li>
+<li><strong>Cancelamento da compra:</strong> Valida o comportamento ao cancelar o processo de checkout.</li>
+</ol>
+<h3 id="fluxo-de-compra" class="tsd-anchor-link"><strong>Fluxo de Compra</strong><a href="#fluxo-de-compra" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol start="15">
+<li><strong>Finalização de compra:</strong> Testa o fluxo completo de compra, desde o login até a confirmação do pedido.</li>
+<li><strong>Verificação de mensagens de erro:</strong> Valida as mensagens de erro exibidas durante o fluxo de compra.</li>
+</ol>
+<h3 id="outros" class="tsd-anchor-link"><strong>Outros</strong><a href="#outros" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol start="17">
+<li><strong>Logout:</strong> Valida a funcionalidade de logout.</li>
+<li><strong>Acesso ao menu lateral:</strong> Testa a funcionalidade do menu lateral.</li>
+<li><strong>Resetar estado da aplicação:</strong> Verifica se o estado da aplicação é resetado corretamente.</li>
+</ol>
+<hr>
+<h2 id="tecnologias-utilizadas" class="tsd-anchor-link"><strong>Tecnologias Utilizadas</strong><a href="#tecnologias-utilizadas" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<li><strong><a href="https://playwright.dev/">Playwright</a>:</strong> Framework de automação de testes.</li>
+<li><strong><a href="https://nodejs.org/">Node.js</a>:</strong> Ambiente de execução TypeScript.</li>
+<li><strong><a href="https://www.typescriptlang.org/">TypeScript</a>:</strong> Linguagem de programação para tipagem estática.</li>
+<li><strong><a href="https://git-scm.com/">Git</a>:</strong> Controle de versão.</li>
+<li><strong><a href="https://github.com/">GitHub</a>:</strong> Hospedagem do repositório.</li>
+<li><strong><a href="https://www.npmjs.com/package/pixelmatch">Pixelmatch</a>:</strong> Biblioteca de comparação de imagens.</li>
+<li><strong><a href="https://www.npmjs.com/package/pngjs">PNGJS</a>:</strong> Biblioteca para manipulação de imagens PNG.</li>
+<li><strong><a href="https://typedoc.org/">TypeDoc</a>:</strong> Gerador de documentação para projetos TypeScript.</li>
+</ul>
+<hr>
+<h2 id="pré-requisitos" class="tsd-anchor-link"><strong>Pré-requisitos</strong><a href="#pré-requisitos" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Antes de executar o projeto, certifique-se de ter instalado:</p>
+<ul>
+<li><a href="https://nodejs.org/">Node.js</a> (versão 16 ou superior)</li>
+<li><a href="https://git-scm.com/">Git</a> (opcional, para clonar o repositório)</li>
+</ul>
+<hr>
+<h2 id="como-executar-o-projeto" class="tsd-anchor-link"><strong>Como Executar o Projeto</strong><a href="#como-executar-o-projeto" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="1-clonar-o-repositório" class="tsd-anchor-link">1. Clonar o Repositório<a href="#1-clonar-o-repositório" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0">git</span><span class="hl-1"> </span><span class="hl-2">clone</span><span class="hl-1"> </span><span class="hl-2">https://github.com/seu-usuario/nome-do-repositorio.git</span><br/><span class="hl-0">cd</span><span class="hl-1"> </span><span class="hl-2">nome-do-repositorio</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="2-instalar-dependências" class="tsd-anchor-link">2. Instalar Dependências<a href="#2-instalar-dependências" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="3-executar-os-testes" class="tsd-anchor-link">3. Executar os Testes<a href="#3-executar-os-testes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-3">playwright</span><span class="hl-1"> </span><span class="hl-3">test</span><br/><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-3">playwright</span><span class="hl-1"> </span><span class="hl-3">test</span><span class="hl-1"> </span><span class="hl-3">login</span><span class="hl-1">.</span><span class="hl-3">spec</span><span class="hl-1">.</span><span class="hl-0">ts</span><span class="hl-1"> (</span><span class="hl-3">para</span><span class="hl-1"> </span><span class="hl-3">um</span><span class="hl-1"> </span><span class="hl-3">teste</span><span class="hl-1"> </span><span class="hl-3">isolado</span><span class="hl-1">)</span>
+</code><button>Copy</button></pre>
+
+<p>Por padrão o headless está marcado como:
+headless: true, ....</p>
+<p>Porém, se quer observar os testes acontecendo, mude para false e remova o cometário lauchOptions, caso queria observar mais devagar, aumente para 1000 (1s) ou 2000 (2s):</p>
+<p>launchOptions: {</p>
+<pre><code>slowMo: 500,
+</code></pre>
+<p>}, ...</p>
+<p>ou execute o teste com a tag <code>--headed</code>:</p>
+<pre><code class="bash"><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">playwright</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1"> </span><span class="hl-4">--headed</span><br/><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">playwright</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1"> </span><span class="hl-2">cart.spec.ts</span><span class="hl-1"> </span><span class="hl-4">--headed</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="4-gerar-relatórios" class="tsd-anchor-link">4. Gerar relatórios<a href="#4-gerar-relatórios" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Para gerar um relatório detalhado da execução dos testes, execute:</p>
+<pre><code class="bash"><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">playwright</span><span class="hl-1"> </span><span class="hl-2">show-report</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Após a execução dos testes, um relatório HTML será gerado automaticamente. Para visualizá-lo, abra o arquivo playwright-report/index.html no seu navegador.</p>
+<h3 id="5-estrutura-do-projeto" class="tsd-anchor-link">5. Estrutura do projeto<a href="#5-estrutura-do-projeto" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>/projeto-playwright/</p>
+<p>├── tests/                         # Casos de teste</p>
+<p>│ ├── login.spec.ts                # Testes de login</p>
+<p>│ ├── cart.spec.ts                 # Testes de carrinho</p>
+<p>│ ├── inventory.spec.ts            # Testes do inventário</p>
+<p>│ ├── sorting.spec.ts              # Testes de ordenação</p>
+<p>│ ├── form.spec.ts                 # Testes do formulário de checkout</p>
+<p>│ └── purchase.spec.ts             # Testes de compra</p>
+<p>├── pages/                         # Page Objects</p>
+<p>│ ├── loginPage.ts                 # Página de login</p>
+<p>│ ├── cartPage.ts                  # Página do carrinho</p>
+<p>│ ├── inventoryPage.ts             # Página do inventário</p>
+<p>│ ├── purchaseFlow.ts              # Fluxo de compra</p>
+<p>│ └── imageFlow.ts                 # Fluxo de imagens</p>
+<p>├── interfaces/                    # Interfaces TypeScript</p>
+<p>│ ├── inventory.interface.ts       # Interface para itens do inventário</p>
+<p>│ ├── login.interface.ts           # Interface para credenciais de login</p>
+<p>│ └── form.interface.ts            # Interface para o formulário de checkout</p>
+<p>├── utils/                         # Utilitários e helpers</p>
+<p>│ ├── getInventory.ts              # Função para obter itens do inventário</p>
+<p>│ └── imageCompare.ts              # Funções auxiliares para comparação de imagens</p>
+<p>├── playwright.config.ts           # Configurações do Playwright</p>
+<p>├── package.json                   # Dependências do projeto</p>
+<p>├── tsconfig.json                  # Configurações do TypeScript</p>
+<p>├── typedoc.json                   # Configurações do TypeDoc</p>
+<p>└── <a href="http://README.md">README.md</a>                      # Documentação do projeto</p>
+<h3 id="6-boas-práticas-adotadas" class="tsd-anchor-link">6. Boas práticas adotadas<a href="#6-boas-práticas-adotadas" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>
+<p>Page Object Model (POM): Separação das páginas da aplicação em classes para facilitar a manutenção e reutilização do código.</p>
+</li>
+<li>
+<p>Testes Independentes: Cada teste é independente e pode ser executado separadamente.</p>
+</li>
+<li>
+<p>Relatórios Automatizados: Geração de relatórios detalhados após a execução dos testes.</p>
+</li>
+<li>
+<p>Configuração Multiplataforma: Execução dos testes em diferentes navegadores (Chromium, Firefox, WebKit).</p>
+</li>
+<li>
+<p>Uso de TypeScript: Tipagem estática para melhorar a qualidade e a manutenibilidade do código.</p>
+</li>
+<li>
+<p>Documentação Automatizada: Geração de documentação com TypeDoc para descrever a estrutura do projeto e os testes.</p>
+</li>
+<li>
+<p>Variáveis de Ambiente: Uso de variáveis de ambiente para credenciais e configurações sensíveis.</p>
+</li>
+</ul>
+<h3 id="7-documentação-com-typedoc" class="tsd-anchor-link">7. Documentação com TypeDoc<a href="#7-documentação-com-typedoc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Para gerar a documentação do projeto, execute:</p>
+<pre><code class="bash"><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">typedoc</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A documentação será gerada na pasta docs/. Abra o arquivo index.html para visualizar a documentação.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#automação-de-testes-com-playwright---sauce-demo"><span>Automação de <wbr/>Testes com <wbr/>Playwright -<wbr/> <wbr/>Sauce <wbr/>Demo</span></a><ul><li><a href="#funcionalidades"><span>Funcionalidades</span></a></li><li><a href="#cenários-de-teste-automatizados"><span>Cenários de <wbr/>Teste <wbr/>Automatizados</span></a></li><li><ul><li><a href="#login"><span>Login</span></a></li><li><a href="#carrinho"><span>Carrinho</span></a></li><li><a href="#inventário"><span>Inventário</span></a></li><li><a href="#formulário-de-checkout"><span>Formulário de <wbr/>Checkout</span></a></li><li><a href="#fluxo-de-compra"><span>Fluxo de <wbr/>Compra</span></a></li><li><a href="#outros"><span>Outros</span></a></li></ul></li><li><a href="#tecnologias-utilizadas"><span>Tecnologias <wbr/>Utilizadas</span></a></li><li><a href="#pré-requisitos"><span>Pré-<wbr/>requisitos</span></a></li><li><a href="#como-executar-o-projeto"><span>Como <wbr/>Executar o <wbr/>Projeto</span></a></li><li><ul><li><a href="#1-clonar-o-repositório"><span>1. <wbr/>Clonar o <wbr/>Repositório</span></a></li><li><a href="#2-instalar-dependências"><span>2. <wbr/>Instalar <wbr/>Dependências</span></a></li><li><a href="#3-executar-os-testes"><span>3. <wbr/>Executar os <wbr/>Testes</span></a></li><li><a href="#4-gerar-relatórios"><span>4. <wbr/>Gerar relatórios</span></a></li><li><a href="#5-estrutura-do-projeto"><span>5. <wbr/>Estrutura do projeto</span></a></li><li><a href="#6-boas-práticas-adotadas"><span>6. <wbr/>Boas práticas adotadas</span></a></li><li><a href="#7-documentação-com-typedoc"><span>7. <wbr/>Documentação com <wbr/>Type<wbr/>Doc</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">sauce_demo_playwright</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>

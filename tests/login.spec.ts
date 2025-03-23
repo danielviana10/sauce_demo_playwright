@@ -2,7 +2,9 @@ import { test, expect } from "@playwright/test";
 import { LoginPage } from "../pages/loginPage";
 import { LoginCredentials } from "../interfaces/login.interface";
 
-// Constantes para mensagens de erro esperadas
+/**
+ * Constantes para mensagens de erro esperadas durante os testes de login.
+ */
 const ERROR_MESSAGES = {
   INVALID_CREDENTIALS: "Epic sadface: Username and password do not match any user in this service",
   USERNAME_REQUIRED: "Epic sadface: Username is required",
@@ -10,58 +12,82 @@ const ERROR_MESSAGES = {
   LOCKED_OUT_USER: "Epic sadface: Sorry, this user has been locked out.",
 };
 
+/**
+ * Testes de login para o usuário `standard_user` e outros cenários de login.
+ * Este arquivo contém testes para validar o comportamento do sistema durante o login,
+ * incluindo cenários de sucesso, falha e casos especiais como usuário bloqueado e problemas de performance.
+ */
 test.describe("Testes de login com standard_user", () => {
   let loginPage: LoginPage;
 
-  // Credenciais válidas para o usuário standard_user
+  /**
+   * Credenciais válidas para o usuário `standard_user`.
+   */
   const validCredentials: LoginCredentials = {
     username: "standard_user",
     password: "secret_sauce",
   };
 
-  // Credenciais para o usuário bloqueado (locked_out_user)
+  /**
+   * Credenciais para o usuário bloqueado (`locked_out_user`).
+   */
   const lockedOutUserCredentials: LoginCredentials = {
     username: "locked_out_user",
     password: "secret_sauce",
   };
 
-  // Credenciais para o usuário com problemas de performance (performance_glitch_user)
+  /**
+   * Credenciais para o usuário com problemas de performance (`performance_glitch_user`).
+   */
   const performanceGlitchUserCredentials: LoginCredentials = {
     username: "performance_glitch_user",
     password: "secret_sauce",
   };
 
-  // Credenciais inválidas (usuário e senha incorretos)
+  /**
+   * Credenciais inválidas (usuário e senha incorretos).
+   */
   const invalidCredentials: LoginCredentials = {
     username: "invalid_user",
     password: "invalid_password",
   };
 
-  // Credenciais vazias (sem usuário e senha)
+  /**
+   * Credenciais vazias (sem usuário e senha).
+   */
   const emptyCredentials: LoginCredentials = {
     username: "",
     password: "",
   };
 
-  // Credenciais com apenas o nome de usuário preenchido
+  /**
+   * Credenciais com apenas o nome de usuário preenchido.
+   */
   const onlyUsername: LoginCredentials = {
     username: "standard_user",
     password: "",
   };
 
-  // Credenciais com apenas a senha preenchida
+  /**
+   * Credenciais com apenas a senha preenchida.
+   */
   const onlyPassword: LoginCredentials = {
     username: "",
     password: "secret_sauce",
   };
 
-  // Executa antes de cada teste: inicializa a página de login
+  /**
+   * Executa antes de cada teste: inicializa a página de login.
+   */
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     await loginPage.navigate();
   });
 
-  // Teste: Login com credenciais válidas clicando no botão
+  /**
+   * Teste: Login com credenciais válidas clicando no botão.
+   * Verifica se o login é bem-sucedido e se a página de inventário é carregada.
+   */
   test("Login com credenciais válidas clicando no botão", async () => {
     await loginPage.login(validCredentials);
 
@@ -74,7 +100,10 @@ test.describe("Testes de login com standard_user", () => {
     expect(await loginPage.isInventoryPageVisible()).toBe(true);
   });
 
-  // Teste: Login com credenciais inválidas clicando no botão
+  /**
+   * Teste: Login com credenciais inválidas clicando no botão.
+   * Verifica se a mensagem de erro correta é exibida.
+   */
   test("Login com credenciais inválidas clicando no botão", async () => {
     await loginPage.login(invalidCredentials);
 
@@ -84,7 +113,10 @@ test.describe("Testes de login com standard_user", () => {
     );
   });
 
-  // Teste: Login sem preencher nenhum campo
+  /**
+   * Teste: Login sem preencher nenhum campo.
+   * Verifica se a mensagem de erro correta é exibida.
+   */
   test("Login sem preencher nenhum campo", async () => {
     await loginPage.login(emptyCredentials);
 
@@ -94,7 +126,10 @@ test.describe("Testes de login com standard_user", () => {
     );
   });
 
-  // Teste: Login preenchendo apenas o nome de usuário
+  /**
+   * Teste: Login preenchendo apenas o nome de usuário.
+   * Verifica se a mensagem de erro correta é exibida.
+   */
   test("Login preenchendo apenas o username", async () => {
     await loginPage.login(onlyUsername);
 
@@ -104,7 +139,10 @@ test.describe("Testes de login com standard_user", () => {
     );
   });
 
-  // Teste: Login preenchendo apenas a senha
+  /**
+   * Teste: Login preenchendo apenas a senha.
+   * Verifica se a mensagem de erro correta é exibida.
+   */
   test("Login preenchendo apenas a password", async () => {
     await loginPage.login(onlyPassword);
 
@@ -114,7 +152,10 @@ test.describe("Testes de login com standard_user", () => {
     );
   });
 
-  // Teste: Logout após login com credenciais válidas
+  /**
+   * Teste: Logout após login com credenciais válidas.
+   * Verifica se o logout é realizado com sucesso e se a página de login é carregada.
+   */
   test("Logout após login com credenciais válidas", async () => {
     await loginPage.login(validCredentials); // Realiza o login com credenciais válidas
 
@@ -133,7 +174,10 @@ test.describe("Testes de login com standard_user", () => {
     await expect(loginPage.getPage().locator('#password')).toBeVisible();
   });
 
-  // Teste: Login com usuário bloqueado (locked_out_user)
+  /**
+   * Teste: Login com usuário bloqueado (`locked_out_user`).
+   * Verifica se a mensagem de erro correta é exibida.
+   */
   test("Login com usuário bloqueado", async () => {
     await loginPage.login(lockedOutUserCredentials);
 
@@ -143,7 +187,10 @@ test.describe("Testes de login com standard_user", () => {
     );
   });
 
-  // Teste: Login com performance_glitch_user (atraso de 4 segundos)
+  /**
+   * Teste: Login com `performance_glitch_user` (atraso de 4 segundos).
+   * Verifica se o login é bem-sucedido após um atraso e se a página de inventário é carregada.
+   */
   test("Login com performance_glitch_user (atraso de 4 segundos)", async () => {
     const startTime = Date.now(); // Marca o tempo inicial
 

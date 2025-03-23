@@ -1,0 +1,5 @@
+{
+    "entryPoints": ["./tests", "./pages", "./interfaces"],
+    "entryPointStrategy": "expand",
+    "out": "docs"
+  }

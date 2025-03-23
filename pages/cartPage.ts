@@ -2,9 +2,17 @@ import { Page } from "@playwright/test";
 import { InventoryItem } from "../interfaces/inventory.interface";
 import { getInventoryItems } from "../utils/getInventoryItems";
 
+/**
+ * Página do Carrinho da aplicação Sauce Demo.
+ * Esta classe contém métodos para interagir com a página do carrinho.
+ */
 export class CartPage {
     private page: Page;
 
+    /**
+     * Construtor da classe CartPage.
+     * @param page - Instância da página do Playwright.
+     */
     constructor(page: Page) {
         this.page = page;
     }
@@ -12,11 +20,22 @@ export class CartPage {
     /**
      * Obtém os itens da lista de inventário.
      * @returns Um array de objetos contendo nome, descrição, preço e ID dos itens.
-    */
+     */
     async getInventoryItems(): Promise<InventoryItem[]> {
         return getInventoryItems(this.page);
     }
 
+    /**
+     * Gera o `data-test` do botão de adicionar ou remover item do carrinho.
+     * @private
+     * @param item - O item do inventário.
+     * @param action - A ação desejada ('add' ou 'remove').
+     * @returns O `data-test` do botão.
+     * @example
+     * const cartPage = new CartPage(page);
+     * const buttonDataTest = cartPage.generateButtonDataTest(item, 'add');
+     * console.log(buttonDataTest); // Exemplo: "add-to-cart-sauce-labs-backpack"
+     */
     private generateButtonDataTest(item: InventoryItem, action: 'add' | 'remove') {
         const actionPrefix = action === 'add' ? 'add-to-cart' : 'remove';
         const itemNameSlug = item.name.toLowerCase().replace(/ /g, '-');
@@ -24,8 +43,8 @@ export class CartPage {
     }
 
     /**
-         * Adiciona um item ao carrinho sem validar o botão remove.
-         * @param item - O item a ser adicionado.
+     * Adiciona um item ao carrinho.
+     * @param item - O item a ser adicionado.
      */
     async addItemToCart(item: InventoryItem) {
         const addButtonDataTest = this.generateButtonDataTest(item, 'add');
@@ -39,7 +58,7 @@ export class CartPage {
     /**
      * Remove um item do carrinho.
      * @param item - O item a ser removido.
-    */
+     */
     async removeItemFromCart(item: InventoryItem) {
         const removeButtonDataTest = this.generateButtonDataTest(item, 'remove');
 
@@ -49,10 +68,10 @@ export class CartPage {
     }
 
     /**
-        * Obtém o nome de um item no carrinho.
-        * @param item - O item do inventário.
-        * @returns O nome do item no carrinho.
-    */
+     * Obtém o nome de um item no carrinho.
+     * @param item - O item do inventário.
+     * @returns O nome do item no carrinho.
+     */
     async getCartItemName(item: InventoryItem): Promise<string> {
         return this.page.locator(`.cart_item:has-text("${item.name}") [data-test="inventory-item-name"]`).innerText();
     }
@@ -80,7 +99,7 @@ export class CartPage {
      * Obtém a quantidade de itens no carrinho.
      * @returns A quantidade de itens no carrinho.
      */
-    async getCartItemCount() {
+    async getCartItemCount(): Promise<number> {
         const cartCount = await this.page.locator('.shopping_cart_badge').textContent();
         return cartCount ? parseInt(cartCount) : 0;
     }
@@ -94,5 +113,4 @@ export class CartPage {
         const itemInCart = await this.page.locator(`.cart_item:has-text("${item.name}")`).isVisible();
         return itemInCart;
     }
-
 }

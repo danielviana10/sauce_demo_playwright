@@ -1,5 +1,14 @@
+/**
+ * Interface que representa as credenciais de login.
+ */
 export interface LoginCredentials {
-    username: string;
-    password: string;
-  }
-  
+  /**
+   * O nome de usuário.
+   */
+  username: string;
+
+  /**
+   * A senha do usuário.
+   */
+  password: string;
+}

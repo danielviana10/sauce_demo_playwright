@@ -7,40 +7,53 @@ import { InventoryItem } from '../interfaces/inventory.interface';
 import { FormCheckout } from '../interfaces/form.interface';
 import { CartPage } from '../pages/cartPage';
 
+/**
+ * Testes de fluxo de compra para o usuário `standard_user`.
+ * Este conjunto de testes verifica o comportamento do fluxo de compra, incluindo adicionar itens ao carrinho,
+ * preencher o formulário de checkout, finalizar a compra e cancelar a compra.
+ */
 test.describe('Fluxo de Compra', () => {
     let loginPage: LoginPage;
     let purchaseFlow: PurchaseFlow;
     let inventoryPage: InventoryPage;
-    let cartPage: CartPage
+    let cartPage: CartPage;
 
-    // Credenciais de login válidas
+    /**
+     * Credenciais de login válidas para o usuário `standard_user`.
+     */
     const credentials: LoginCredentials = {
         username: "standard_user",
         password: "secret_sauce",
     };
 
-    // Dados do formulário de checkout
+    /**
+     * Dados do formulário de checkout.
+     */
     const data: FormCheckout = {
         firstName: 'Daniel',
         lastName: 'Viana',
         zipCode: '06406150',
     };
 
-    // Usuário com problema
+    /**
+     * Credenciais de login para o usuário `problem_user`.
+     */
     const problemUserCredentials: LoginCredentials = {
         username: "problem_user",
         password: "secret_sauce",
     };
 
-    // Usuário com erro
+    /**
+     * Credenciais de login para o usuário `error_user`.
+     */
     const errorUserCredentials: LoginCredentials = {
         username: "error_user",
         password: "secret_sauce",
     };
 
     /**
-        * Executa antes de cada teste: inicializa as páginas e faz login.
-    */
+     * Executa antes de cada teste: inicializa as páginas e faz login.
+     */
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         purchaseFlow = new PurchaseFlow(page);
@@ -58,12 +71,14 @@ test.describe('Fluxo de Compra', () => {
     });
 
     /**
-        * Teste: Comprar um item
-    */
+     * Teste: Comprar um item.
+     * Verifica o fluxo completo de compra, desde a adição de um item ao carrinho até a finalização do checkout.
+     */
     test('Comprar um item', async () => {
         // Obtém os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
         const item = items[0];
+
         // Clica no título do item para acessar a página de detalhes
         await purchaseFlow.clickItemTitle(item);
 
@@ -105,8 +120,9 @@ test.describe('Fluxo de Compra', () => {
     });
 
     /**
-        * Teste: Validar cancelamento da compra
-    */
+     * Teste: Validar cancelamento da compra.
+     * Verifica o fluxo de cancelamento de compra, desde a adição de um item ao carrinho até o cancelamento do checkout.
+     */
     test('Validar cancelamento da compra', async () => {
         // Obtém os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();

@@ -6,26 +6,36 @@ import { LoginCredentials } from "../interfaces/login.interface";
 import { FormCheckout } from "../interfaces/form.interface";
 import { PurchaseFlow } from "../pages/purchaseFlow";
 
-test.describe("Testes de Carrinho para o standar_user", () => {
+/**
+ * Testes de Carrinho para o usuário `standard_user`.
+ * Este conjunto de testes verifica o comportamento do carrinho de compras, incluindo adicionar, remover e validar itens.
+ */
+test.describe("Testes de Carrinho para o standard_user", () => {
     let loginPage: LoginPage;
     let inventoryPage: InventoryPage;
     let cartPage: CartPage;
     let purchaseFlow: PurchaseFlow;
 
-    // Credenciais de login válidas
+    /**
+     * Credenciais de login válidas para o usuário `standard_user`.
+     */
     const standardUserCredentials: LoginCredentials = {
         username: "standard_user",
         password: "secret_sauce",
     };
 
-    // Dados do formulário de checkout
+    /**
+     * Dados do formulário de checkout.
+     */
     const data: FormCheckout = {
         firstName: 'Daniel',
         lastName: 'Viana',
         zipCode: '06406150',
     };
 
-    // Executa antes de cada teste: inicializa as páginas e faz login
+    /**
+     * Executa antes de cada teste: inicializa as páginas e faz login.
+     */
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         inventoryPage = new InventoryPage(page);
@@ -36,9 +46,10 @@ test.describe("Testes de Carrinho para o standar_user", () => {
         await loginPage.login(standardUserCredentials);
     });
 
-    /*
-        * Teste: Remover todos os itens do carrinho
-    */
+    /**
+     * Teste: Remover todos os itens do carrinho.
+     * Verifica se é possível remover todos os itens do carrinho e se o carrinho fica vazio.
+     */
     test("Remover todos os itens do carrinho", async () => {
         // Extrai os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
@@ -61,9 +72,10 @@ test.describe("Testes de Carrinho para o standar_user", () => {
         }
     });
 
-    /*
-        * Teste: Remover um item específico do carrinho (mantendo outros itens)
-    */
+    /**
+     * Teste: Remover um item específico do carrinho (mantendo outros itens).
+     * Verifica se é possível remover um item específico do carrinho sem afetar os outros itens.
+     */
     test("Remover um item específico do carrinho", async () => {
         // Extrai os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
@@ -86,9 +98,10 @@ test.describe("Testes de Carrinho para o standar_user", () => {
         expect(isSecondItemInCart).toBeTruthy();
     });
 
-    /*
-        * Teste: Verificar se os itens do carrinho correspondem aos adicionados
-    */
+    /**
+     * Teste: Verificar se os itens do carrinho correspondem aos adicionados.
+     * Verifica se os itens no carrinho têm os mesmos dados (nome, descrição e preço) dos itens adicionados.
+     */
     test("Verificar se os itens do carrinho são os mesmos que foram adicionados", async () => {
         // Extrai os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
@@ -113,9 +126,10 @@ test.describe("Testes de Carrinho para o standar_user", () => {
         }
     });
 
-    /*
-        * Teste: Verificar se os itens do checkout são os mesmos itens do carrinho
-    */
+    /**
+     * Teste: Verificar se os itens do checkout são os mesmos itens do carrinho.
+     * Verifica se os itens exibidos na página de checkout correspondem aos itens no carrinho.
+     */
     test("Verificar se os itens do checkout são os mesmos itens do carrinho", async () => {
         // Extrai os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
@@ -142,18 +156,27 @@ test.describe("Testes de Carrinho para o standar_user", () => {
     });
 });
 
+/**
+ * Testes de Carrinho para o usuário `problem_user`.
+ * Este conjunto de testes verifica o comportamento do carrinho de compras para o usuário `problem_user`,
+ * que simula problemas no sistema.
+ */
 test.describe("Testes de Carrinho para o problem_user", () => {
     let loginPage: LoginPage;
     let inventoryPage: InventoryPage;
     let cartPage: CartPage;
 
-    // Usuário com erro
+    /**
+     * Credenciais de login para o usuário `problem_user`.
+     */
     const problemUserCredentials: LoginCredentials = {
         username: "problem_user",
         password: "secret_sauce",
     };
 
-    // Executa antes de cada teste: inicializa as páginas e faz login
+    /**
+     * Executa antes de cada teste: inicializa as páginas e faz login.
+     */
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         inventoryPage = new InventoryPage(page);
@@ -163,9 +186,10 @@ test.describe("Testes de Carrinho para o problem_user", () => {
         await loginPage.login(problemUserCredentials);
     });
 
-    /*
-        * Teste: Verificar se nem todos os produtos foram adicionados ao carrinho
-    */
+    /**
+     * Teste: Verificar se nem todos os produtos foram adicionados ao carrinho.
+     * Verifica se o usuário `problem_user` não consegue adicionar todos os itens ao carrinho.
+     */
     test("Verificar se nem todos os produtos foram adicionados ao carrinho", async () => {
         // Extrai os itens da lista de inventário
         const items = await inventoryPage.getInventoryItems();
